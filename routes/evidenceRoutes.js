@@ -44,7 +44,7 @@ function evidenceAuth(req, res, next) {
 
 
 /* =========================================================
-   Send Evidence To Separate Evidence Vault
+   Sync Evidence To Separate Evidence Vault
 ========================================================= */
 
 async function syncEvidenceToVault({
@@ -57,12 +57,8 @@ async function syncEvidenceToVault({
   timeline,
   pageSnapshot
 }) {
-  const vaultUrl =
-    process.env.EVIDENCE_VAULT_URL;
-
-  const vaultKey =
-    process.env.EVIDENCE_VAULT_API_KEY;
-
+  const vaultUrl = process.env.EVIDENCE_VAULT_URL;
+  const vaultKey = process.env.EVIDENCE_VAULT_API_KEY;
 
   if (!vaultUrl) {
     throw new Error(
@@ -70,45 +66,42 @@ async function syncEvidenceToVault({
     );
   }
 
-
   if (!vaultKey) {
     throw new Error(
       'EVIDENCE_VAULT_API_KEY is not configured'
     );
   }
 
-
   const url =
     `${vaultUrl.replace(/\/$/, '')}/api/ingest`;
 
-
-  const response = await fetch(
-    url,
-    {
-      method: 'POST',
-
-      headers: {
-        'Content-Type': 'application/json',
-        'x-evidence-key': vaultKey
-      },
-
-      body: JSON.stringify({
-        user,
-
-        incident: {
-          ...incident,
-          incidentCode: out.incidentCode
-        },
-
-        screenshot,
-        recording,
-        replay,
-        timeline,
-        pageSnapshot
-      })
-    }
+  console.log(
+    `Sending evidence to Vault: ${out.incidentCode}`
   );
 
+  const response = await fetch(url, {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+      'x-evidence-key': vaultKey
+    },
+
+    body: JSON.stringify({
+      user,
+
+      incident: {
+        ...incident,
+        incidentCode: out.incidentCode
+      },
+
+      screenshot,
+      recording,
+      replay,
+      timeline,
+      pageSnapshot
+    })
+  });
 
   let data = {};
 
@@ -118,7 +111,6 @@ async function syncEvidenceToVault({
     data = {};
   }
 
-
   if (!response.ok) {
     throw new Error(
       data.message ||
@@ -126,11 +118,9 @@ async function syncEvidenceToVault({
     );
   }
 
-
   console.log(
     `Evidence synchronized to Vault: ${out.incidentCode}`
   );
-
 
   return data;
 }
@@ -141,115 +131,139 @@ async function syncEvidenceToVault({
 ========================================================= */
 
 function createEvidenceRoutes(io) {
-
   const router = express.Router();
 
   router.use(evidenceAuth);
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      Status
-  --------------------------------------------------------- */
+  ======================================================= */
 
-  router.get(
-    '/status',
-    (req, res) => {
-      res.json({
-        success: true,
-        user: req.user.fullName,
-        role: req.user.role,
-        capture: 'ready'
+  router.get('/status', (req, res) => {
+    res.json({
+      success: true,
+      user: req.user.fullName,
+      role: req.user.role,
+      capture: 'ready'
+    });
+  });
+
+
+  /* =======================================================
+     Capture
+  ======================================================= */
+
+  router.post('/capture', async (req, res) => {
+    try {
+      const {
+        incident,
+        screenshot,
+        recording,
+        replay,
+        timeline,
+        pageSnapshot
+      } = req.body || {};
+
+
+      console.log(
+        'Evidence capture request received:',
+        {
+          riskLevel: incident?.riskLevel,
+          action:
+            incident?.actionType ||
+            incident?.actionLabel ||
+            'unknown'
+        }
+      );
+
+
+      /* ---------------------------------------------------
+         Validate
+      --------------------------------------------------- */
+
+      if (
+        !incident ||
+        !['High', 'Critical'].includes(
+          incident.riskLevel
+        )
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            'Only High/Critical incidents can be stored.'
+        });
+      }
+
+
+      /* ---------------------------------------------------
+         Save locally first
+      --------------------------------------------------- */
+
+      const out = await saveEvidence({
+        user: req.user,
+        incident,
+        screenshot,
+        recording,
+        replay,
+        timeline,
+        pageSnapshot
       });
-    }
-  );
 
 
-  /* ---------------------------------------------------------
-     Capture Evidence
-  --------------------------------------------------------- */
+      console.log(
+        'Local evidence saved:',
+        {
+          incidentCode: out.incidentCode,
+          evidenceStatus: out.evidenceStatus,
+          hasScreenshot: out.hasScreenshot,
+          hasReplay: out.hasReplay
+        }
+      );
 
-  router.post(
-    '/capture',
-    async (req, res) => {
+
+      /* ---------------------------------------------------
+         Check local evidence
+      --------------------------------------------------- */
+
+      if (
+        out.evidenceStatus !== 'Complete' ||
+        !out.hasScreenshot ||
+        !out.hasReplay
+      ) {
+        console.error(
+          'Evidence capture incomplete:',
+          out.incidentCode
+        );
+
+        return res.status(422).json({
+          success: false,
+
+          message:
+            'Evidence capture incomplete. Screenshot and session recording are required.',
+
+          ...out
+        });
+      }
+
+
+      /* ---------------------------------------------------
+         Sync to external Vault
+
+         IMPORTANT:
+         Vault failure must NOT stop Admin notification.
+      --------------------------------------------------- */
+
+      let vaultSynced = false;
+      let vaultError = null;
+      let vaultResult = null;
 
       try {
-
-        const {
-          incident,
-          screenshot,
-          recording,
-          replay,
-          timeline,
-          pageSnapshot
-        } = req.body || {};
-
-
-        /* ---------------------------------------------------
-           Only High / Critical incidents
-        --------------------------------------------------- */
-
-        if (
-          !incident ||
-          !['High', 'Critical'].includes(
-            incident.riskLevel
-          )
-        ) {
-          return res.status(400).json({
-            success: false,
-            message:
-              'Only High/Critical incidents can be stored.'
-          });
-        }
-
-
-        /* ---------------------------------------------------
-           Save Evidence In Main WeCare
-        --------------------------------------------------- */
-
-        const out = await saveEvidence({
-          user: req.user,
-          incident,
-          screenshot,
-          recording,
-          replay,
-          timeline,
-          pageSnapshot
-        });
-
-
-        /* ---------------------------------------------------
-           Verify Evidence Was Captured
-        --------------------------------------------------- */
-
-        if (
-          out.evidenceStatus !== 'Complete' ||
-          !out.hasScreenshot ||
-          !out.hasReplay
-        ) {
-          return res.status(422).json({
-            success: false,
-
-            message:
-              'Evidence capture incomplete. Screenshot and session recording are required.',
-
-            ...out
-          });
-        }
-
-
-        /* ---------------------------------------------------
-           Synchronize Evidence To Public Evidence Vault
-        --------------------------------------------------- */
-
-        const vaultResult =
+        vaultResult =
           await syncEvidenceToVault({
-
             user: req.user,
-
             incident,
-
             out,
-
             screenshot,
             recording,
             replay,
@@ -257,131 +271,151 @@ function createEvidenceRoutes(io) {
             pageSnapshot
           });
 
+        vaultSynced = true;
 
-        /* ---------------------------------------------------
-           Alert Admin ONLY after:
-           
-           1. Local evidence saved
-           2. Screenshot stored
-           3. Replay stored
-           4. Evidence copied to Vault
-        --------------------------------------------------- */
-
-        if (io) {
-
-          const now =
-            new Date().toISOString();
-
-
-          const event = {
-
-            ...incident,
-
-            incidentCode:
-              out.incidentCode,
-
-            incidentId:
-              incident.incidentId || null,
-
-            userId:
-              req.user.id,
-
-            username:
-              req.user.username,
-
-            fullName:
-              req.user.fullName,
-
-            doctor:
-              req.user.role === 'doctor'
-                ? req.user.fullName
-                : undefined,
-
-            doctorId:
-              req.user.doctorId || null,
-
-            department:
-              req.user.department || null,
-
-            role:
-              req.user.role,
-
-            risk:
-              incident.riskLevel,
-
-            riskLevel:
-              incident.riskLevel,
-
-            evidenceReady: true,
-
-            evidenceFiles:
-              out.files,
-
-            vaultSynced: true,
-
-            time: now,
-
-            timestamp: now
-          };
-
-
-          io.emit(
-            'admin:critical-alert',
-            event
-          );
-
-
-          io.emit(
-            'evidence:stored',
-            event
-          );
-        }
-
-
-        /* ---------------------------------------------------
-           Success Response
-        --------------------------------------------------- */
-
-        return res.json({
-
-          success: true,
-
-          ...out,
-
-          vaultSynced: true,
-
-          vaultIncident:
-            vaultResult.incidentCode ||
-            out.incidentCode
-
-        });
-
-
-      } catch (error) {
+      } catch (vaultSyncError) {
+        vaultError =
+          vaultSyncError.message;
 
         console.error(
-          'Evidence capture error:',
-          error
+          'Evidence Vault synchronization failed:',
+          vaultError
+        );
+
+        /*
+          DO NOT throw here.
+
+          We still need to notify Admin even
+          if the remote Vault is temporarily unavailable.
+        */
+      }
+
+
+      /* ---------------------------------------------------
+         Always notify Admin after local evidence succeeded
+      --------------------------------------------------- */
+
+      if (io) {
+        const now =
+          new Date().toISOString();
+
+        const event = {
+          ...incident,
+
+          incidentCode:
+            out.incidentCode,
+
+          incidentId:
+            incident.incidentId || null,
+
+          userId:
+            req.user.id,
+
+          username:
+            req.user.username,
+
+          fullName:
+            req.user.fullName,
+
+          doctor:
+            req.user.role === 'doctor'
+              ? req.user.fullName
+              : undefined,
+
+          doctorId:
+            req.user.doctorId || null,
+
+          department:
+            req.user.department || null,
+
+          role:
+            req.user.role,
+
+          risk:
+            incident.riskLevel,
+
+          riskLevel:
+            incident.riskLevel,
+
+          evidenceReady: true,
+
+          evidenceFiles:
+            out.files,
+
+          vaultSynced,
+
+          vaultError,
+
+          time: now,
+          timestamp: now
+        };
+
+
+        console.log(
+          `Sending Admin critical alert: ${out.incidentCode}`
         );
 
 
-        return res.status(500).json({
+        io.emit(
+          'admin:critical-alert',
+          event
+        );
 
-          success: false,
 
-          message:
-            'Evidence capture failed: ' +
-            error.message
+        io.emit(
+          'evidence:stored',
+          event
+        );
 
-        });
+
+        console.log(
+          `Admin critical alert emitted: ${out.incidentCode}`
+        );
+      } else {
+        console.error(
+          'Socket.IO instance unavailable in evidenceRoutes'
+        );
       }
+
+
+      /* ---------------------------------------------------
+         Response
+      --------------------------------------------------- */
+
+      return res.json({
+        success: true,
+
+        ...out,
+
+        vaultSynced,
+
+        vaultError,
+
+        vaultIncident:
+          vaultResult?.incidentCode ||
+          out.incidentCode
+      });
+
+
+    } catch (error) {
+      console.error(
+        'Evidence capture error:',
+        error
+      );
+
+      return res.status(500).json({
+        success: false,
+
+        message:
+          'Evidence capture failed: ' +
+          error.message
+      });
     }
-  );
+  });
 
 
   return router;
 }
 
 
-module.exports =
-  createEvidenceRoutes;
+module.exports = createEvidenceRoutes;
