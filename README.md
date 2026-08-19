@@ -1,1004 +1,528 @@
-# WECARE--THREAT-DETECTION-WITH-0-TRUST<p align="center">
-  <strong>Intelligent Healthcare Data Protection through Behavioral AI, Zero Trust and Insider-Threat Detection</strong>
-</p>
+# WeCare Phase 12 MVP
 
-<p align="center">
-  Healthcare Security • Behavioral Analytics • Zero Trust • Insider Threat Detection • Digital Evidence
-</p>
+See `PHASE12_README.md` for the final MVP guide.
 
----
+# Health Threat Detection
 
-# WeCare
+Secure hospital authentication, activity monitoring, and risk detection system with separate **Doctor** and **Admin** interfaces. Built as a cybersecurity hackathon project.
 
-> **Protect care. Verify intent. Detect abnormal behavior. Preserve evidence.**
-
-WeCare is a healthcare security platform designed to protect sensitive patient information from **insider threats, abnormal access patterns, unauthorized exports, and unsafe administrative decisions**.
-
-Traditional healthcare systems often trust users after successful authentication.
-
-WeCare takes a different approach:
-
-> **Authentication gives access, but behavior determines trust.**
-
-The platform combines:
-
-- Hospital workflow management
-- Behavioral anomaly detection
-- Isolation Forest machine learning
-- Zero Trust authorization
-- Low-and-slow data exfiltration detection
-- Real-time security communication
-- Administrative accountability
-- Automated incident containment
-- Digital evidence preservation
+The project is built in phases:
+- **Phase 1** — Hardened authentication, role-based access control, and real-time login monitoring over a local network.
+- **Phase 2** — Doctor activity monitoring, rule-based risk scoring, real-time admin alerts, and attack simulation. (current)
 
 ---
 
-# The Problem
+## Project Overview
 
-Healthcare systems store highly sensitive information such as:
-
-- Patient histories
-- Laboratory reports
-- Medical scans
-- Diagnoses
-- Prescriptions
-- Medical records
-
-Traditional access control mainly answers:
-
-> **“Is this user authorized to access the system?”**
-
-But insider-threat protection requires another question:
-
-> **“Is this authorized user still behaving normally?”**
-
-A legitimate Doctor account could still:
-
-- access unusually large numbers of patient records
-- repeatedly export small batches of data
-- use unfamiliar devices
-- work at unusual hours
-- access unexpected departments
-- attempt bulk extraction of patient information
-
-WeCare was designed to detect these patterns without blocking legitimate clinical work.
-
----
-
-# Core Security Philosophy
-
-WeCare follows one key principle:
-
-## Never trust an action only because the account is trusted.
-
-Every sensitive action can be evaluated using:
-
-```text
-Identity
-   +
-Role
-   +
-Current Action
-   +
-Historical Behaviour
-   +
-Export Volume
-   +
-Recent Activity
-   +
-Authorization Context
-   ↓
-Security Decision
-```
-
-This creates a **behavior-aware Zero Trust healthcare environment**.
-
----
-
-# What Makes WeCare Different?
-
-WeCare combines three security layers.
-
-### 1. Behavioral Intelligence
-
-Machine learning evaluates whether current healthcare-worker behavior resembles normal historical activity.
-
-### 2. Intent-Aware Authorization
-
-Sensitive exports require a legitimate purpose, while larger or suspicious operations require additional approval.
-
-### 3. Privileged-User Accountability
-
-Doctors are monitored for suspicious data access, but Administrators are also monitored if they repeatedly override High or Critical security warnings.
-
-Security therefore applies to **everyone with access to sensitive healthcare data**.
-
----
-
-# System Overview
-
-WeCare consists of three major operational areas:
-
-### Doctor Workspace
-
-Provides clinical access to patient information while enforcing behavioral and export-security controls.
-
-### Administrator Security Console
-
-Provides hospital administration, approval workflows, threat monitoring, incident investigation, and security communication.
-
-### Evidence Vault
-
-Stores preserved digital evidence from Critical security incidents for later investigation.
-
----
-
-# Major Features
-
-| Healthcare Operations | Security Controls | Intelligent Detection |
-|---|---|---|
-| Patient Reports | Zero Trust Export Control | Isolation Forest |
-| Laboratory Reports | Purpose-Based Authorization | Behavioral Anomaly Detection |
-| Scan Reports | Admin Approval Workflow | Risk Classification |
-| Medical Records | Bulk Export Blocking | Low-and-Slow Detection |
-| Doctor Schedule | Session Restriction | Behavioral Baseline |
-| Admin Management | Evidence Preservation | Security Risk Profile |
-
----
-
-# Doctor Dashboard
-
-The Doctor Dashboard provides access to clinical information while continuously enforcing security policy.
-
-Available modules include:
-
-- My Schedule
-- Patient Reports
-- Laboratory Reports
-- Scan Reports
-- Medical Records
-- Security Inbox
-
-Doctors can perform normal clinical operations while high-risk actions receive additional verification.
-
----
-
-# Scan Report Viewer
-
-The Scan Reports section contains the existing hospital scan dataset together with a **Cardiac Report**.
-
-The Cardiac Report is stored as **one medical record containing five pages**.
-
-When opened, all five pages appear inside one vertically scrollable viewer.
-
-<p align="center">
-  <img src="assets/doctor-dashboard.png" alt="WeCare Doctor Dashboard with Cardiac Report" width="95%">
-</p>
-
-```text
-Scan Reports
-│
-├── Cardiac Report
-│      ├── Page 1
-│      ├── Page 2
-│      ├── Page 3
-│      ├── Page 4
-│      └── Page 5
-│
-├── Existing Scan Record
-├── Existing Scan Record
-└── ...
-```
-
-The original scan dataset remains available.
-
----
-
-# Secure Patient Data Export
-
-WeCare treats patient-data export as a sensitive operation.
-
-Export decisions consider:
-
-- number of selected records
-- export purpose
-- recent export activity
-- cumulative record volume
-- previous export requests
-- approval history
-- behavioral risk
-
----
-
-## Small Export — 1 to 10 Records
-
-A Doctor must provide an authorization reason before exporting.
-
-Possible reasons include:
-
-- clinical review
-- patient handover
-- audit
-- research
-- legal requirement
-- approved administrative purpose
-
-Successful exports are logged.
-
----
-
-## Medium Export — 11 to 50 Records
-
-The operation is not immediately downloaded.
-
-Instead:
-
-```text
-Doctor selects records
-        │
-        ▼
-Provides export purpose
-        │
-        ▼
-Export Request Created
-        │
-        ▼
-Administrator Review
-     ┌──┴──┐
-     ▼     ▼
- Approve  Reject
-     │     │
-     ▼     ▼
-Download  Reason returned
-enabled   to Doctor
-```
-
-Each request receives an identifier such as:
-
-```text
-EXP-00001
-```
-
-The Doctor receives the final approval or rejection decision live.
-
----
-
-# Low-and-Slow Exfiltration Detection
-
-An insider may avoid one large export by repeatedly downloading smaller batches.
-
-Example:
-
-```text
-Day 1 → 3 patient records
-Day 2 → 3 patient records
-Day 3 → 3 patient records
-Day 4 → additional export attempt
-```
-
-Each individual transaction may appear harmless.
-
-WeCare correlates them across time.
-
-The platform evaluates:
-
-- number of recent export transactions
-- cumulative records exported
-- previous approval requests
-- current record selection
-- rolling seven-day activity
-
-This allows WeCare to detect **slow data exfiltration**, not only obvious bulk downloads.
-
----
-
-# Critical Bulk Export Protection
-
-Extreme bulk-export behavior is treated as a Critical security incident.
-
-```text
-Bulk Export Attempt
-        │
-        ▼
-Critical Security Decision
-        │
-        ▼
-Export Blocked
-        │
-        ▼
-Evidence Preserved
-        │
-        ▼
-Administrator Notified
-        │
-        ▼
-Session Terminated
-```
-
-The Doctor cannot obtain the protected information through the blocked operation.
-
-### Critical Incident Example
-
-<p align="center">
-  <img src="assets/critical-security-alert.png" alt="WeCare Critical Security Alert" width="82%">
-</p>
-
-The alert provides the Administrator with important incident information such as:
-
-- Doctor
-- Role
-- Action
-- Number of records
-- Risk level
-- Result
-- Date / time
-- Incident identifier
-
----
-
-# Artificial Intelligence
-
-WeCare uses **Isolation Forest** for behavioral anomaly detection. :contentReference[oaicite:1]{index=1}
-
-Isolation Forest is an:
-
-- unsupervised learning algorithm
-- anomaly-detection algorithm
-- tree-based model
-- ensemble-learning technique
-
-It is designed to identify behavior that differs significantly from a healthcare worker's normal activity.
-
----
-
-## Behavioral Features
-
-The model can evaluate information such as:
-
-```text
-Login Time
-Session Duration
-Records Viewed
-Downloads
-Departments Accessed
-Failed Authentication Attempts
-Unknown Device Activity
-External Network Activity
-After-Hours Activity
-Bulk Export Behaviour
-```
-
----
-
-# AI Detection Workflow
-
-```text
-Healthcare Worker Activity
-           │
-           ▼
-     Feature Extraction
-           │
-           ▼
- Historical Behaviour Baseline
-           │
-           ▼
-     Isolation Forest
-           │
-           ▼
-      Anomaly Score
-           │
-           ▼
-      Risk Evaluation
-           │
-    ┌──────┼──────┬─────────┐
-    ▼      ▼      ▼         ▼
-   Low   Medium   High    Critical
-```
-
-Normal behavior remains close to the learned baseline.
-
-Unusual combinations of activity receive a higher anomaly score.
-
----
-
-# Hybrid AI + Zero Trust Security
-
-Machine learning does not make every security decision by itself.
-
-WeCare deliberately combines:
-
-```text
-Machine Learning
-       +
-Security Policies
-       +
-Historical Activity
-       +
-Authorization
-       =
-Final Security Response
-```
-
-### Machine Learning detects
-
-- unusual behavior
-- abnormal access patterns
-- behavioral deviation
-- suspicious combinations of activity
-
-### Zero Trust rules enforce
-
-- export authorization
-- approval requirements
-- cumulative export limits
-- critical-operation blocking
-- session restriction
-- administrative escalation
-
-This hybrid approach provides predictable enforcement while still benefiting from behavioral intelligence.
-
----
-
-# Security Risk Spider Profile
-
-The Administrator dashboard provides a radar/spider visualization of the current behavioral security environment.
-
-The graph includes:
-
-- Record Access
-- Downloads
-- Behavior Deviation
-- Medium+ Risk
-- High+ Risk
-- Critical Exposure
-
-The chart gives Administrators a quick overview of current behavioral risk.
-
----
-
-# Real-Time Security Communication
-
-WeCare uses **Socket.IO** to deliver security events without requiring page refreshes. :contentReference[oaicite:2]{index=2}
-
-Real-time events can include:
-
-- export approval requests
-- export approval decisions
-- export rejection decisions
-- Doctor security notices
-- live Administrator messages
-- Critical incident notifications
-- session restriction events
-- escalation events
-
-Administrators can send a notice and the Doctor receives it as a **live popup** on the Doctor Dashboard.
-
-The Security Inbox also preserves communication for later review.
-
-## Live Security Alert Demo
-
-<p align="center">
-  <img src="assets/live-security-alert.gif" alt="WeCare Live Security Alert Demo" width="92%">
-</p>
-
-The GIF can demonstrate:
-
-```text
-Suspicious Doctor Activity
-        ↓
-Security Event Generated
-        ↓
-Administrator Alerted
-        ↓
-Live Security Popup Appears
-```
-
----
-
-# Administrator Accountability
-
-Administrators are not automatically treated as harmless privileged users.
-
-Consider this scenario:
-
-```text
-Doctor generates suspicious export request
-                │
-                ▼
-        Risk Level: High
-                │
-                ▼
-      Administrator receives warning
-                │
-                ▼
-         "Approve Anyway"
-```
-
-One override may have a legitimate explanation.
-
-Repeated unsafe overrides can indicate an administrative insider threat.
-
----
-
-# Administrative Risk Escalation
-
-WeCare records unsafe High/Critical approval overrides.
-
-```text
-First Unsafe Override
-        │
-        ▼
-Medium Administrative Risk
-
-Second Unsafe Override
-        │
-        ▼
-High Administrative Risk
-
-Third Unsafe Override
-        │
-        ▼
-Critical Administrative Incident
-        │
-        ├── Evidence Preserved
-        ├── Account Restricted
-        ├── Session Terminated
-        └── Higher Official Notified
-```
-
-This creates accountability on both sides of the approval workflow.
-
----
-
-# Evidence Vault
-
-Critical security incidents can preserve digital evidence for investigation. :contentReference[oaicite:3]{index=3}
-
-Evidence may include:
-
-- Screenshot
-- Session Replay
-- Security Timeline
-- Incident Metadata
-- Page Snapshot
-- Evidence Manifest
-
-<p align="center">
-  <img src="assets/evidence-vault.png" alt="WeCare Evidence Vault" width="95%">
-</p>
-
-The Evidence Vault provides investigators with a searchable view of preserved Critical incidents.
-
-Displayed information can include:
-
-- User
-- Role
-- Action
-- Risk
-- Date / Time
-- Evidence access
-
----
-
-## Evidence Investigation Demo
-
-<p align="center">
-  <img src="assets/evidence-vault-demo.gif" alt="WeCare Evidence Vault Investigation Demo" width="92%">
-</p>
-
-The GIF can demonstrate:
-
-```text
-Critical Incident
-      ↓
-Open Evidence Vault
-      ↓
-Select Incident
-      ↓
-View Screenshot
-      ↓
-Review Timeline
-      ↓
-Replay Session
-```
-
----
-
-# Evidence Visibility
-
-Evidence access is deliberately separated.
-
-### Doctor Evidence
-
-Appropriate Doctor incident evidence may be viewed by an Administrator during investigation.
-
-### Administrator Evidence
-
-Evidence generated from suspicious Administrator behavior is preserved inside the **Evidence Vault**.
-
-The normal Admin Dashboard does not expose internal Administrator evidence identifiers or direct Admin-evidence controls.
-
-This separation helps preserve investigation integrity.
-
----
-
-# Automated Incident Response
-
-WeCare can automatically respond when risk reaches a Critical level.
-
-```text
-Detect
-  ↓
-Classify
-  ↓
-Block
-  ↓
-Capture Evidence
-  ↓
-Notify
-  ↓
-Restrict Account
-  ↓
-Terminate Session
-  ↓
-Escalate
-```
-
-The goal is not simply to display a warning.
-
-WeCare demonstrates:
-
-> **Detection + Containment + Investigation**
-
----
-
-# Administrator Dashboard
-
-The Administrator interface includes:
-
-- Dashboard
-- Doctors
-- Patients
-- Reception
-- Laboratory
-- Pharmacy
-- Medical Records
-- Export Requests
-- Threat Monitoring
-- Security Notices
-- AI Security Operations Center
-
-Administrators can monitor clinical activity and security operations from one interface.
-
----
-
-# AI Security Operations Center
-
-The AI Security Operations Center provides visibility into behavioral detections.
-
-Information can include:
-
-- prediction
-- anomaly score
-- confidence
-- risk classification
-- behavioral explanation
-- recent security activity
-- incident information
-
-This allows Administrators to understand **why an activity was considered suspicious**, rather than receiving only an unexplained alert.
-
----
-
-# Overall Architecture
-
-```text
-                         WECARE PLATFORM
-                                │
-          ┌─────────────────────┴─────────────────────┐
-          │                                           │
-          ▼                                           ▼
-   Doctor Dashboard                          Admin Dashboard
-          │                                           │
-          └─────────────────────┬─────────────────────┘
-                                │
-                                ▼
-                    Authentication / JWT Layer
-                                │
-                                ▼
-                     Zero Trust Policy Engine
-                                │
-                     ┌──────────┴──────────┐
-                     │                     │
-                     ▼                     ▼
-              Behavioral Data       Export Activity
-                     │                     │
-                     └──────────┬──────────┘
-                                ▼
-                       Isolation Forest
-                                │
-                                ▼
-                      Risk Classification
-                                │
-             ┌──────────────────┴──────────────────┐
-             │                                     │
-             ▼                                     ▼
-       Normal Activity                      Suspicious Activity
-             │                                     │
-             ▼                                     ▼
-      Continue Workflow                   Security Response
-                                                   │
-                         ┌─────────────────────────┼─────────────┐
-                         ▼                         ▼             ▼
-                   Admin Review              Evidence Vault   Containment
-```
-
----
-
-# Technology Stack
+The system is designed to run on a single **Admin laptop** that hosts the Node.js server, while a **Doctor laptop** connects to the Admin laptop's local IP address over the same Wi-Fi/LAN. The Admin dashboard receives real-time notifications whenever a doctor logs in, providing live visibility into clinician access.
 
 | Layer | Technology |
-|---|---|
+|-------|-----------|
 | Backend | Node.js, Express.js |
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
 | Database | SQLite |
-| Real-Time Communication | Socket.IO |
-| Authentication | JWT |
-| Password Security | bcrypt |
-| Machine Learning | Isolation Forest |
-| Session Evidence | rrweb |
-| Screenshot Evidence | html2canvas |
-| Security Architecture | Zero Trust |
-| Version Control | Git & GitHub |
+| Authentication | bcryptjs + jsonwebtoken (JWT) |
+| Real-time | Socket.IO |
+| Frontend | HTML, CSS, Vanilla JavaScript |
 
 ---
 
-# Project Structure
+## Phase 1 Features
 
-```text
-WeCare
-│
-├── public/
-│   ├── css/
-│   ├── js/
-│   ├── assets/
-│   ├── doctor-dashboard.html
-│   └── admin-dashboard.html
-│
-├── routes/
-│   ├── authRoutes.js
-│   ├── communicationRoutes.js
-│   └── mlRoutes.js
-│
-├── services/
-│   ├── isolationForest.js
-│   ├── mlService.js
-│   ├── evidenceService.js
-│   ├── activityService.js
-│   ├── sessionService.js
-│   └── socketService.js
-│
+1. Admin authentication
+2. Doctor authentication
+3. JWT-based authorization (8 hour expiry)
+4. SQLite database (auto-created)
+5. Password hashing with bcryptjs
+6. Role-based access control (`admin` / `doctor`)
+7. Admin Dashboard
+8. Doctor Dashboard
+9. Socket.IO connection
+10. Real-time Doctor login notification on the Admin Dashboard
+11. Logout functionality
+12. Protected API route (`GET /api/auth/me`)
+
+---
+
+## Phase 2 Features
+
+1. Doctor activity monitoring — every simulated hospital action is logged
+2. Rule-based risk scoring engine (`services/riskEngine.js`) with explainable, human-readable reasons
+3. Session risk score, risk level, and colored progress bar on the doctor dashboard
+4. Real-time admin alerts via Socket.IO (`activity:new`, `risk:updated`, `security:high-risk-alert`, `security:critical-alert`)
+5. Security incidents automatically created when a doctor reaches Critical risk (score >= 80)
+6. Admin dashboard: live activity feed, doctor risk monitor, high-risk alert panel, and security incident table
+7. Activity filters (all / suspicious / critical)
+8. Attack simulation button (unknown device login -> cross-department access -> export 100 records)
+9. Demo reset button (clears the current doctor's activity + incidents)
+10. Backend-validated action types — the frontend never controls risk points
+
+---
+
+## Folder Structure
+
+```
+health-threat-detection/
+├── package.json
+├── server.js
+├── .env.example
+├── .gitignore
+├── README.md
+├── database/
+│   ├── database.js
+│   └── seed.js
 ├── middleware/
 │   └── authMiddleware.js
-│
-├── evidence-vault-public/
-│
-├── assets/
-│   ├── doctor-dashboard.png
-│   ├── critical-security-alert.png
-│   ├── evidence-vault.png
-│   ├── live-security-alert.gif
-│   └── evidence-vault-demo.gif
-│
-├── evidenceVaultServer.js
-├── server.js
-├── package.json
-└── README.md
+├── routes/
+│   ├── authRoutes.js
+│   ├── activityRoutes.js
+│   └── adminRoutes.js
+├── services/
+│   ├── socketService.js
+│   ├── riskEngine.js
+│   └── activityService.js
+└── public/
+    ├── index.html
+    ├── admin-login.html
+    ├── admin-dashboard.html
+    ├── doctor-login.html
+    ├── doctor-dashboard.html
+    ├── css/
+    │   ├── common.css
+    │   ├── admin.css
+    │   └── doctor.css
+    └── js/
+        ├── admin-login.js
+        ├── admin-dashboard.js
+        ├── doctor-login.js
+        └── doctor-dashboard.js
 ```
 
 ---
 
-# Demonstration Scenarios
+## Installation Instructions
 
-## Scenario 1 — Legitimate Small Export
+1. Open a terminal in the project folder (e.g. `D:\health-threat-detection`).
 
-```text
-Doctor selects a few records
-        ↓
-Provides legitimate purpose
-        ↓
-Policy evaluates request
-        ↓
-Export permitted
-        ↓
-Activity logged
+2. Install dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Copy the example environment file:
+
+   ```
+   copy .env.example .env
+   ```
+
+   On macOS/Linux:
+
+   ```
+   cp .env.example .env
+   ```
+
+4. Open `.env` and set a secure `JWT_SECRET` (any long random string).
+
+---
+
+## Environment Configuration
+
+The `.env` file contains two variables:
+
+```
+PORT=80
+JWT_SECRET=replace-with-a-secure-secret
+```
+
+- **PORT** — the port the server listens on (default `3000`).
+- **JWT_SECRET** — the secret used to sign JWT tokens. Replace the placeholder with a long, random, private string. **Never commit your real secret to git.**
+
+The `.gitignore` file already excludes `.env` and the SQLite database file.
+
+---
+
+## Database Seed Instructions
+
+Seed the database with the default admin and doctor users:
+
+```
+npm run seed
+```
+
+This script:
+- Creates the SQLite database and tables if they do not exist.
+- Hashes the default passwords with bcryptjs.
+- Inserts the admin and doctor users.
+- **Skips users that already exist**, so it is safe to run repeatedly.
+
+You should see output similar to:
+
+```
+Database connected at ...\database\health.db
+Seeded user 'admin' (admin).
+Seeded user 'doctor' (doctor).
+Seeding complete.
 ```
 
 ---
 
-## Scenario 2 — Medium Export
+## Running Instructions
 
-```text
-Doctor selects 11–50 records
-        ↓
-Admin approval required
-        ↓
-Request appears in Export Requests
-        ↓
-Admin Approves / Rejects
-        ↓
-Doctor receives live decision
+1. Make sure you have completed installation and seeding.
+
+2. Start the server:
+
+   ```
+   npm start
+   ```
+
+3. You should see:
+
+   ```
+   Database connected
+   Socket.IO initialized
+   Server running on http://0.0.0.0:80
+   ```
+
+4. Open a browser and navigate to one of the URLs below.
+
+### Admin URL (on the Admin laptop)
+
 ```
+http://localhost/admin-login.html
+```
+
+### Doctor URL (on the Admin laptop)
+
+```
+http://localhost/doctor-login.html
+```
+
+### Doctor URL (from another laptop on the same LAN)
+
+```
+http://ADMIN-LAPTOP-IP:3000/doctor-login.html
+```
+
+Replace `ADMIN-LAPTOP-IP` with the Admin laptop's local IP address (see below).
 
 ---
 
-## Scenario 3 — Low-and-Slow Export
+## Demo Credentials
 
-```text
-Small Export
-     ↓
-Small Export
-     ↓
-Small Export
-     ↓
-Activity Correlation
-     ↓
-Suspicious Pattern Detected
-     ↓
-Future Export Requires Approval
-```
+| Role  | Username | Password    | Full Name              | Doctor ID | Department |
+|-------|----------|-------------|------------------------|-----------|------------|
+| Admin | `admin`  | `admin123`  | Security Administrator | —         | —          |
+| Doctor| `doctor` | `doctor123` | Dr. Alex Morgan        | DOC001    | Cardiology |
+
+These credentials are for demo/hackathon use only.
 
 ---
 
-## Scenario 4 — Critical Bulk Export
+## Phase 2 — Risk Scoring Engine
 
-```text
-Doctor attempts extreme bulk export
-        ↓
-Critical Risk
-        ↓
-Operation Blocked
-        ↓
-Evidence Captured
-        ↓
-Admin Alerted
-        ↓
-Doctor Session Terminated
-```
+The risk engine (`services/riskEngine.js`) assigns fixed points per action type. The backend is the sole source of truth — the frontend never sends risk points.
 
----
+| Action | Points | Reason |
+|--------|--------|--------|
+| View Patient Record | +2 | Viewed a normal patient record |
+| View Emergency Record | +5 | Viewed an emergency record |
+| Access own department | +3 | Accessed their own department |
+| Access another department | +20 | Accessed a different department |
+| Export 10 records | +15 | Exported 10 patient records |
+| Export 100 records | +45 | Exported 100 patient records |
+| Download confidential report | +25 | Downloaded a confidential report |
+| Unknown device login | +35 | Logged in from an unknown device |
+| Rapid record access | +30 | Rapid sequential record access detected |
 
-## Scenario 5 — Unsafe Administrator
+The session score is capped at 100.
 
-```text
-High/Critical Request
-        ↓
-Admin chooses Approve Anyway
-        ↓
-Repeated unsafe decisions detected
-        ↓
-Administrative risk increases
-        ↓
-Critical Admin Incident
-        ↓
-Evidence preserved
-        ↓
-Account restricted
-        ↓
-Higher Official escalation
-```
+| Score range | Risk level | Status label | Color |
+|-------------|-----------|--------------|-------|
+| 0–29 | Low | Normal | green |
+| 30–59 | Medium | Suspicious | yellow |
+| 60–79 | High | Critical | orange |
+| 80–100 | Critical | Critical | red |
+
+Every score change includes a human-readable explanation, e.g.:
+
+- "Risk increased by 45 because the doctor exported 100 patient records."
+- "Risk increased by 20 because the doctor accessed a different department."
 
 ---
 
-# Running Locally
+## Phase 2 API Routes
 
-## Install Dependencies
+All routes require a valid JWT in the `Authorization: Bearer <token>` header.
 
-```bash
+### Doctor routes (`/api/activity`) — doctor role only
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/activity/log` | Log one activity. Body: `{ actionType }` |
+| GET | `/api/activity/my-activity` | Fetch the doctor's recent activity (last 50) |
+| GET | `/api/activity/my-risk` | Fetch the doctor's current session risk score |
+| POST | `/api/activity/simulate-attack` | Run the 3-step attack simulation |
+| POST | `/api/activity/reset-demo` | Clear the doctor's activity logs + incidents |
+
+### Admin routes (`/api/admin`) — admin role only
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/admin/activities` | Fetch all activity logs (last 200) |
+| GET | `/api/admin/incidents` | Fetch all security incidents (last 100) |
+
+---
+
+## Phase 2 — Real-Time Socket.IO Events
+
+| Event | Emitted when | Recipients |
+|-------|-------------|------------|
+| `activity:new` | Any activity is logged | All clients |
+| `risk:updated` | A doctor's score changes | All clients |
+| `security:high-risk-alert` | Score reaches 60–79 | All clients |
+| `security:critical-alert` | Score reaches 80+ (and an incident is created) | All clients |
+
+Admin dashboard payloads include: doctor name, doctor ID, activity, risk points, total risk score, severity, reason, timestamp, and IP address.
+
+---
+
+## Phase 2 Demo Flow
+
+1. Open the admin dashboard on the Admin laptop (`http://localhost/admin-dashboard.html`) and log in as admin.
+2. Open the doctor dashboard on the Doctor laptop (`http://ADMIN-LAPTOP-IP:3000/doctor-dashboard.html`) and log in as doctor.
+3. On the doctor dashboard, click individual action buttons to watch the risk meter rise and the admin live activity feed update in real time.
+4. Click **Run Attack Simulation**. The doctor dashboard will sequentially simulate unknown device login (+35), cross-department access (+20), and export 100 records (+45), reaching a Critical score of 100. The admin dashboard will show:
+   - A high-risk alert at 55 (after the first two actions)
+   - A critical alert and a new security incident row at 100
+5. Click **Reset Demo** on the doctor dashboard to clear the activity and risk score, then try again.
+
+---
+
+## Phase 2 Testing
+
+Phase 2 has a dedicated test suite:
+
+```
+npm test
+```
+
+This runs both the Phase 1 integration tests and the Phase 2 tests covering:
+
+- Normal activity logging
+- Invalid action type rejection
+- Protected route rejection without JWT
+- Doctor unable to access admin routes (403)
+- Risk score calculation
+- High-risk alert threshold (score >= 60)
+- Critical incident creation (score >= 80)
+- Attack simulation reaching critical
+- Demo reset clearing data
+- Frontend-supplied risk points being ignored by the backend
+
+---
+
+## Two-Laptop LAN Setup
+
+This project is designed to run across two laptops on the same local network.
+
+### Step 1 — Find the Admin laptop's IP address
+
+On the **Admin laptop** (Windows 11):
+
+1. Press `Win + R`, type `cmd`, and press Enter.
+2. Run:
+
+   ```
+   ipconfig
+   ```
+
+3. Look for the **IPv4 Address** under your active network adapter (Wi-Fi or Ethernet). It usually looks like `192.168.x.x` or `10.0.x.x`.
+
+   Example:
+
+   ```
+   Wireless LAN adapter Wi-Fi:
+      IPv4 Address. . . . . . . . . . . : 192.168.1.42
+   ```
+
+   In this example, the Admin laptop IP is `192.168.1.42`.
+
+### Step 2 — Connect both laptops to the same network
+
+- Both laptops must use the **same Wi-Fi network** or a **mobile hotspot** hosted by one of the laptops.
+- Confirm the Doctor laptop can ping the Admin laptop (optional):
+
+   ```
+   ping 192.168.1.42
+   ```
+
+### Step 3 — Start the server on the Admin laptop
+
+On the Admin laptop, in the project folder:
+
+```
 npm install
-```
-
-## Start WeCare
-
-```bash
+npm run seed
 npm start
 ```
 
-Main application:
+The server listens on `0.0.0.0`, meaning it accepts connections from other devices on the LAN — not just localhost.
 
-```text
-http://localhost:80
+### Step 4 — Open the Admin dashboard
+
+On the Admin laptop, open:
+
+```
+http://localhost/admin-login.html
 ```
 
-Evidence Vault:
+Log in with the admin credentials. Keep this dashboard open to watch live doctor logins.
 
-```text
-http://localhost:8080
+### Step 5 — Open the Doctor portal from the Doctor laptop
+
+On the Doctor laptop, open a browser and navigate to:
+
+```
+http://ADMIN-LAPTOP-IP:3000/doctor-login.html
+```
+
+For example:
+
+```
+http://192.168.1.42:3000/doctor-login.html
+```
+
+Log in with the doctor credentials. The Admin dashboard should display the doctor's login in real time in the **Live Doctor Login Activity** panel.
+
+---
+
+## Windows Firewall Instructions
+
+If the Doctor laptop cannot reach the Admin laptop, Windows Firewall may be blocking port 3000.
+
+### Option A — Allow port 3000 via Windows Defender Firewall
+
+1. On the Admin laptop, press `Win + R`, type `wf.msc`, and press Enter.
+2. In the left pane, click **Inbound Rules**.
+3. In the right pane, click **New Rule...**.
+4. Select **Port** and click Next.
+5. Select **TCP** and **Specific local ports**, enter `3000`, and click Next.
+6. Select **Allow the connection** and click Next.
+7. Check the network profiles you use (at least **Private**), click Next.
+8. Name the rule (e.g. `Health Threat Detection - Port 3000`) and click Finish.
+
+### Option B — Temporarily allow the Node app
+
+When you first run `npm start`, Windows may show a security alert. Click **Allow access** for private networks.
+
+### Option C — Quick test
+
+To temporarily disable the firewall for testing only (not recommended long-term):
+
+```
+netsh advfirewall set allprofiles state off
+```
+
+Re-enable it afterwards:
+
+```
+netsh advfirewall set allprofiles state on
 ```
 
 ---
 
-# Security Design Principles
+## Testing Instructions
 
-WeCare was built around five principles.
+### 1. Seed and start
 
-### 01 — Authentication is not permanent trust
-
-A valid account can still behave maliciously.
-
-### 02 — Small actions can create a large threat
-
-Repeated small exports must be correlated over time.
-
-### 03 — Legitimate operations should remain possible
-
-Security should require justification or approval rather than blindly blocking every export.
-
-### 04 — Privileged users require accountability
-
-Administrators can also become insider threats.
-
-### 05 — Critical decisions require evidence
-
-Security incidents should leave a reliable investigation trail.
-
----
-
-# Project Objective
-
-WeCare demonstrates a healthcare security architecture capable of continuously answering three questions:
-
-```text
-WHO is performing the action?
-
-WHAT are they attempting to do?
-
-DOES their behaviour still deserve trust?
+```
+npm install
+npm run seed
+npm start
 ```
 
-By combining **healthcare operations, Zero Trust policies, Isolation Forest behavioral analysis, real-time incident response, and digital evidence preservation**, WeCare demonstrates a practical approach to protecting patient information against modern insider threats.
+### 2. Admin login flow
+
+- Open `http://localhost/admin-login.html`.
+- Log in with `admin` / `admin123`.
+- Confirm redirect to `admin-dashboard.html`.
+- Confirm the admin name, authentication status, socket status, server status, and current time all display correctly.
+
+### 3. Doctor login flow
+
+- Open `http://localhost/doctor-login.html` (or from the Doctor laptop via the Admin IP).
+- Log in with `doctor` / `doctor123`.
+- Confirm redirect to `doctor-dashboard.html`.
+- Confirm the welcome message, doctor ID, department, and socket status display correctly.
+
+### 4. Real-time notification
+
+- Keep the Admin dashboard open.
+- Log in as a doctor (optionally from the Doctor laptop).
+- A new **Authenticated** activity card should appear at the top of the **Live Doctor Login Activity** panel without a page refresh.
+
+### 5. Role-based access control
+
+- Try logging in as `admin` from the **Doctor Login** page. You should see **Access denied for this role**.
+- Try logging in as `doctor` from the **Admin Login** page. You should see the same message.
+
+### 6. Protected route
+
+- Without a token, call the protected endpoint:
+
+  ```
+  curl http://localhost/api/auth/me
+  ```
+
+  Expected: `401` with `{ "success": false, "message": "Missing authentication token" }`.
+
+- With a valid token:
+
+  ```
+  curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost/api/auth/me
+  ```
+
+  Expected: `200` with the authenticated user's safe information.
+
+### 7. Logout
+
+- Click **Logout** on either dashboard.
+- Confirm redirect to the correct login page and that going back does not restore the session.
 
 ---
 
-# Future Enhancements
+## Common Troubleshooting
 
-Possible future improvements include:
-
-- Role-specific behavioral models
-- Federated learning across hospital departments
-- Advanced device fingerprinting
-- SIEM integration
-- Automated threat-intelligence correlation
-- Explainable AI dashboards
-- Risk-adaptive authentication
-- Hardware-backed evidence signing
-- Multi-hospital security federation
-- Advanced patient-privacy analytics
-
----
-
-# Academic Purpose
-
-WeCare is developed as an **academic and cybersecurity demonstration project**.
-
-The project demonstrates concepts related to:
-
-- Healthcare cybersecurity
-- Insider-threat detection
-- Zero Trust Architecture
-- Behavioral analytics
-- Machine learning
-- Incident response
-- Digital forensics
-- Privileged-user accountability
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| `EADDRINUSE: address already in use :::3000` | Another process is using port 3000 | Stop the other process or change `PORT` in `.env` |
+| Doctor laptop cannot load the page | Firewall blocking port 3000, or different network | Follow the **Windows Firewall** section; confirm both laptops are on the same Wi-Fi/hotspot |
+| `Cannot find module 'sqlite3'` | Dependencies not installed | Run `npm install` |
+| Login returns `Invalid username or password` | Wrong credentials, or database not seeded | Run `npm run seed` and use the demo credentials |
+| `jwt secret is required` / token signing fails | `JWT_SECRET` missing in `.env` | Copy `.env.example` to `.env` and set a secure secret |
+| Doctor login event not appearing on Admin dashboard | Admin dashboard not open, or socket not connected | Keep the Admin dashboard open and check the Socket.IO status pill shows **Connected** |
+| `access denied for this role` | Logging in from the wrong portal | Use the Admin portal for admins and the Doctor portal for doctors |
+| Database locked / `SQLITE_BUSY` | Another process holds the DB file | Stop other Node instances and retry |
+| Page loads but assets 404 | Server not running from the project root | Run `npm start` from the project folder |
 
 ---
 
-<p align="center">
+## Security Notes
 
-### WeCare
+- Passwords are never stored in plain text. They are hashed with bcryptjs.
+- `password_hash` is never returned by any API response.
+- The JWT secret is read from `process.env.JWT_SECRET` and is never hard-coded in source files.
+- All SQL queries use prepared statements with bound parameters to prevent SQL injection.
+- The protected route `GET /api/auth/me` requires a valid Bearer token.
+- Frontend pages redirect to the login page if no token is present or the role does not match.
 
-**Healthcare needs more than trusted accounts. It needs trusted behaviour.**
+---
 
-</p>
+## Phase Scope Boundaries
+
+**Phase 1** covers authentication, JWT authorization, SQLite, role-based access, dashboards, and real-time login monitoring.
+
+**Phase 2** covers activity monitoring, risk scoring, real-time alerts, attack simulation, security incidents, and demo reset.
+
+Future phases may add AI-driven threat detection, patient records management, prescriptions, data export features, and automated attack simulations.

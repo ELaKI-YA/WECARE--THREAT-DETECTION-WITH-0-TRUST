@@ -1,0 +1,19 @@
+{
+  "required_for_complete_incident": [
+    "incident.json",
+    "timeline.json",
+    "replay.json",
+    "screenshot.png",
+    "manifest.json"
+  ],
+  "optional_media": [
+    "recording.webm",
+    "video.mp4"
+  ],
+  "alert_after_evidence_verified": true,
+  "bulk_export_block_before_generation": true,
+  "single_export_requires_reason": true,
+  "admin_three_dismissal_escalation": true,
+  "scatter_plot_enabled": true,
+  "exported_details_enabled": true
+}
