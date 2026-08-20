@@ -1145,8 +1145,8 @@ Password: WeCareAdmin@2026#A91K
 ## Doctor
 
 ```text
-Username: doctor
-Password: WeCareDoctor@2026#D71M
+Username: doctor123
+Password: WeCareDoc123@2026#K82P
 ```
 
 ---
