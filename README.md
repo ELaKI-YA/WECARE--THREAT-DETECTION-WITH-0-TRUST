@@ -1,5 +1,4 @@
-
-<h1 align="center">WeCare</h1>
+<h1 align="center"> WeCare</h1>
 
 <p align="center">
   <strong>Intelligent Healthcare Data Protection through Behavioral AI, Zero Trust and Insider-Threat Detection</strong>
@@ -13,321 +12,494 @@
 
 # WeCare
 
-> **Protect care. Verify intent. Detect abnormal behavior. Preserve evidence.**
+> **Authentication gives access. Behavior determines trust.**
 
-WeCare is a healthcare security platform designed to protect sensitive patient information from **insider threats, abnormal access patterns, unauthorized exports, and unsafe administrative decisions**.
+WeCare is a healthcare security and management platform designed to protect sensitive patient information from:
 
-Traditional healthcare systems often trust users after successful authentication.
+- Insider threats
+- Abnormal user behavior
+- Suspicious medical-record access
+- Unauthorized data exports
+- Low-and-slow data exfiltration
+- Bulk patient-data extraction
+- Unsafe privileged-user actions
 
-WeCare takes a different approach:
+Traditional systems mainly verify a user when they log in.
 
-> **Authentication gives access, but behavior determines trust.**
+WeCare continues evaluating the user's actions **after authentication**.
 
-The platform combines:
-
-- Hospital workflow management
-- Behavioral anomaly detection
-- Isolation Forest machine learning
-- Zero Trust authorization
-- Low-and-slow data exfiltration detection
-- Real-time security communication
-- Administrative accountability
-- Automated incident containment
-- Digital evidence preservation
-
----
-
-# The Problem
-
-Healthcare systems store highly sensitive information such as:
-
-- Patient histories
-- Laboratory reports
-- Medical scans
-- Diagnoses
-- Prescriptions
-- Medical records
-
-Traditional access control mainly answers:
-
-> **“Is this user authorized to access the system?”**
-
-But insider-threat protection requires another question:
-
-> **“Is this authorized user still behaving normally?”**
-
-A legitimate Doctor account could still:
-
-- access unusually large numbers of patient records
-- repeatedly export small batches of data
-- use unfamiliar devices
-- work at unusual hours
-- access unexpected departments
-- attempt bulk extraction of patient information
-
-WeCare was designed to detect these patterns without blocking legitimate clinical work.
-
----
-
-# Core Security Philosophy
-
-WeCare follows one key principle:
-
-## Never trust an action only because the account is trusted.
-
-Every sensitive action can be evaluated using:
+The system continuously asks:
 
 ```text
-Identity
-   +
-Role
-   +
-Current Action
-   +
-Historical Behaviour
-   +
-Export Volume
-   +
-Recent Activity
-   +
-Authorization Context
-   ↓
-Security Decision
+WHO is performing the action?
+
+WHAT are they trying to do?
+
+DOES their behavior still deserve trust?
 ```
 
-This creates a **behavior-aware Zero Trust healthcare environment**.
+WeCare combines normal healthcare operations with:
+
+```text
+Behavior Monitoring
+        +
+Isolation Forest AI
+        +
+Zero Trust
+        +
+Risk Engine
+        +
+Real-Time Alerts
+        +
+Automated Response
+        +
+Evidence Preservation
+```
 
 ---
 
-# What Makes WeCare Different?
+#  What WeCare Does
 
-WeCare combines three security layers.
+WeCare provides normal hospital functionality while continuously monitoring sensitive activity.
 
-### 1. Behavioral Intelligence
+Doctors can:
 
-Machine learning evaluates whether current healthcare-worker behavior resembles normal historical activity.
+- View schedules
+- Access patient reports
+- Review laboratory reports
+- View scan reports
+- Access medical records
+- Export approved records
+- Receive security notifications
 
-### 2. Intent-Aware Authorization
+Administrators can:
 
-Sensitive exports require a legitimate purpose, while larger or suspicious operations require additional approval.
+- Manage doctors
+- Manage patients
+- Manage reception
+- Manage laboratory data
+- Manage pharmacy
+- Access medical records
+- Review export requests
+- Monitor threats
+- Review security notices
+- Use the AI Security Operations Center
+- Investigate Critical incidents
 
-### 3. Privileged-User Accountability
-
-Doctors are monitored for suspicious data access, but Administrators are also monitored if they repeatedly override High or Critical security warnings.
-
-Security therefore applies to **everyone with access to sensitive healthcare data**.
-
----
-
-# System Overview
-
-WeCare consists of three major operational areas:
-
-### Doctor Workspace
-
-Provides clinical access to patient information while enforcing behavioral and export-security controls.
-
-### Administrator Security Console
-
-Provides hospital administration, approval workflows, threat monitoring, incident investigation, and security communication.
-
-### Evidence Vault
-
-Stores preserved digital evidence from Critical security incidents for later investigation.
-
----
-
-# Major Features
-
-| Healthcare Operations | Security Controls | Intelligent Detection |
-|---|---|---|
-| Patient Reports | Zero Trust Export Control | Isolation Forest |
-| Laboratory Reports | Purpose-Based Authorization | Behavioral Anomaly Detection |
-| Scan Reports | Admin Approval Workflow | Risk Classification |
-| Medical Records | Bulk Export Blocking | Low-and-Slow Detection |
-| Doctor Schedule | Session Restriction | Behavioral Baseline |
-| Admin Management | Evidence Preservation | Security Risk Profile |
+At the same time, WeCare analyzes user behavior to identify suspicious activity.
 
 ---
 
 # Doctor Dashboard
 
-The Doctor Dashboard provides access to clinical information while continuously enforcing security policy.
+The Doctor Dashboard provides access to clinical information while security monitoring operates in the background.
 
 Available modules include:
 
-- My Schedule
-- Patient Reports
-- Laboratory Reports
-- Scan Reports
-- Medical Records
-- Security Inbox
+```text
+My Schedule
+Patient Reports
+Laboratory Reports
+Scan Reports
+Medical Records
+Security Inbox
+```
 
-Doctors can perform normal clinical operations while high-risk actions receive additional verification.
+Doctors can perform normal hospital operations without manually interacting with the AI system.
+
+The security engine monitors important activity automatically.
+
+<p align="center">
+  <img src="assets/doctor-dashboard.png" alt="WeCare Doctor Dashboard" width="95%">
+</p>
 
 ---
 
 # Scan Report Viewer
 
-The Scan Reports section contains the existing hospital scan dataset together with a **Cardiac Report**.
+WeCare contains an integrated medical scan-report viewer.
 
-The Cardiac Report is stored as **one medical record containing five pages**.
-
-When opened, all five pages appear inside one vertically scrollable viewer.
-
-<p align="center">
-  <img src="assets/doctor-dashboard.png" alt="WeCare Doctor Dashboard with Cardiac Report" width="95%">
-</p>
+The first report is a **Cardiac Report** containing five pages inside one vertically scrollable viewer.
 
 ```text
 Scan Reports
 │
 ├── Cardiac Report
-│      ├── Page 1
-│      ├── Page 2
-│      ├── Page 3
-│      ├── Page 4
-│      └── Page 5
+│   ├── Page 1
+│   ├── Page 2
+│   ├── Page 3
+│   ├── Page 4
+│   └── Page 5
 │
 ├── Existing Scan Record
 ├── Existing Scan Record
 └── ...
 ```
 
-The original scan dataset remains available.
+This allows doctors to review detailed medical scans while remaining inside the protected WeCare environment.
 
 ---
 
-# Secure Patient Data Export
+# Admin Dashboard
 
-WeCare treats patient-data export as a sensitive operation.
+The Admin Dashboard provides hospital-management functionality and security monitoring from one interface.
 
-Export decisions consider:
-
-- number of selected records
-- export purpose
-- recent export activity
-- cumulative record volume
-- previous export requests
-- approval history
-- behavioral risk
-
----
-
-## Small Export — 1 to 10 Records
-
-A Doctor must provide an authorization reason before exporting.
-
-Possible reasons include:
-
-- clinical review
-- patient handover
-- audit
-- research
-- legal requirement
-- approved administrative purpose
-
-Successful exports are logged.
-
----
-
-## Medium Export — 11 to 50 Records
-
-The operation is not immediately downloaded.
-
-Instead:
+Main modules include:
 
 ```text
-Doctor selects records
-        │
-        ▼
-Provides export purpose
-        │
-        ▼
+Dashboard
+Doctors
+Patients
+Reception
+Laboratory
+Pharmacy
+Medical Records
+Export Requests
+Threat Monitoring
+Security Notices
+AI Security Operations Center
+Settings
+```
+
+The administrator can monitor:
+
+- User activity
+- Risk levels
+- Export requests
+- Critical incidents
+- Doctor behavior
+- Security alerts
+- Evidence status
+- Suspicious actions
+
+---
+
+# Authentication and Authorization
+
+WeCare uses **JWT — JSON Web Tokens** for authenticated sessions.
+
+After login:
+
+```text
+Username + Password
+        ↓
+Credential Verification
+        ↓
+JWT Generated
+        ↓
+User Role Identified
+        ↓
+Access Granted
+```
+
+Roles are used to control access to protected functionality.
+
+Main roles include:
+
+```text
+Doctor
+Admin
+Evidence Officer
+```
+
+Passwords are stored securely using hashing through `bcryptjs`.
+
+---
+
+# Behavioral Security
+
+A successfully authenticated user is not automatically trusted forever.
+
+WeCare continuously evaluates behavior.
+
+Examples of monitored signals include:
+
+```text
+Login Time
+Session Duration
+Records Viewed
+Reports Downloaded
+Departments Accessed
+Failed Login Attempts
+Unknown Device
+External Network
+After-Hours Activity
+Export Volume
+Export Frequency
+Previous Export Activity
+```
+
+These signals are converted into features for security analysis.
+
+---
+
+# Isolation Forest AI
+
+WeCare uses **Isolation Forest** for behavioral anomaly detection.
+
+Isolation Forest is an unsupervised machine-learning algorithm that identifies behavior that differs significantly from normal activity.
+
+The basic process is:
+
+```text
+User Activity
+      ↓
+Feature Extraction
+      ↓
+Behavioral Features
+      ↓
+Isolation Forest
+      ↓
+Anomaly Score
+      ↓
+Risk Evaluation
+```
+
+The system does not need every malicious behavior to be manually defined in advance.
+
+Instead, it can detect unusual combinations of behavior.
+
+---
+
+# Behavioral Features
+
+Examples of features analyzed by the security system include:
+
+```text
+Login Hour
+Session Duration
+Records Viewed
+Number of Downloads
+Departments Accessed
+Failed Login Attempts
+Unknown Device Usage
+External Network Activity
+After-Hours Access
+Bulk Export Activity
+Previous Export Activity
+```
+
+The current behavior can also be compared with historical activity stored in SQLite.
+
+---
+
+#  Hybrid AI + Zero Trust
+
+WeCare does not allow AI alone to make every security decision.
+
+Instead, it combines:
+
+```text
+Machine Learning
+       +
+Historical Activity
+       +
+Security Rules
+       +
+Authorization
+       +
+Zero Trust
+       ↓
+Final Security Response
+```
+
+Isolation Forest identifies unusual behavior.
+
+The Risk Engine and Zero Trust rules decide what should happen next.
+
+---
+
+# AI + Zero Trust Risk Engine
+
+The core security workflow is:
+
+```text
+1. Current Activity
+        ↓
+2. Feature Extraction
+        ↓
+3. Isolation Forest
+        ↓
+4. Anomaly Score
+        ↓
+5. Risk Engine
+        ↓
+6. Zero Trust Rules
+        ↓
+7. Security Decision
+```
+
+The final result can be:
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+Depending on the action and risk, the system can:
+
+```text
+Allow
+Require Approval
+Block
+Capture Evidence
+Notify Admin
+Restrict Session
+Terminate Session
+Escalate
+```
+
+---
+
+# Risk Classification
+
+WeCare categorizes security activity into four main levels.
+
+```text
+LOW
+Normal or expected behavior
+
+MEDIUM
+Behavior requiring additional attention or verification
+
+HIGH
+Suspicious behavior requiring stronger controls
+
+CRITICAL
+Dangerous activity requiring immediate security response
+```
+
+This makes security decisions easier to understand and investigate.
+
+---
+
+#  Secure Patient Data Export
+
+Patient-data export is treated as a sensitive operation.
+
+The decision can consider:
+
+- Number of selected records
+- Export purpose
+- Previous exports
+- Cumulative export volume
+- Recent activity
+- Approval history
+- Behavioral risk
+
+---
+
+# Small Export
+
+For a small export, the Doctor must provide a valid purpose.
+
+Example purposes may include:
+
+```text
+Clinical Review
+Patient Handover
+Audit
+Research
+Legal Requirement
+Approved Administrative Purpose
+```
+
+The activity is logged for later behavioral analysis.
+
+---
+
+#  Medium Export
+
+Larger export requests can require administrator approval.
+
+Example flow:
+
+```text
+Doctor Selects Records
+        ↓
+Provides Export Purpose
+        ↓
 Export Request Created
-        │
-        ▼
+        ↓
 Administrator Review
-     ┌──┴──┐
-     ▼     ▼
+       / \
+      /   \
  Approve  Reject
-     │     │
-     ▼     ▼
-Download  Reason returned
-enabled   to Doctor
+    ↓       ↓
+ Download  Reason Returned
+ Enabled   to Doctor
 ```
 
-Each request receives an identifier such as:
-
-```text
-EXP-00001
-```
-
-The Doctor receives the final approval or rejection decision live.
+The Doctor receives the administrator's decision through the system.
 
 ---
 
-# Low-and-Slow Exfiltration Detection
+# Low-and-Slow Data Exfiltration Detection
 
-An insider may avoid one large export by repeatedly downloading smaller batches.
+An insider may attempt to avoid security rules by repeatedly exporting a small number of records.
 
 Example:
 
 ```text
-Day 1 → 3 patient records
-Day 2 → 3 patient records
-Day 3 → 3 patient records
-Day 4 → additional export attempt
+Day 1 → 3 records
+Day 2 → 3 records
+Day 3 → 3 records
+Day 4 → another export
 ```
 
-Each individual transaction may appear harmless.
+Each individual transaction may look harmless.
 
-WeCare correlates them across time.
+WeCare evaluates the cumulative pattern.
 
-The platform evaluates:
+The system can consider:
 
-- number of recent export transactions
-- cumulative records exported
-- previous approval requests
-- current record selection
-- rolling seven-day activity
+```text
+Recent Export Count
+        +
+Cumulative Records
+        +
+Previous Requests
+        +
+Current Selection
+        +
+Historical Activity
+        ↓
+Cumulative Risk
+```
 
-This allows WeCare to detect **slow data exfiltration**, not only obvious bulk downloads.
+This allows WeCare to detect **low-and-slow exfiltration**, not only obvious bulk-export attacks.
 
 ---
 
 # Critical Bulk Export Protection
 
-Extreme bulk-export behavior is treated as a Critical security incident.
+Extreme bulk-export behavior can trigger a Critical security incident.
+
+Example:
 
 ```text
-Bulk Export Attempt
-        │
-        ▼
-Critical Security Decision
-        │
-        ▼
+Doctor Attempts Bulk Export
+        ↓
+Behavior Analyzed
+        ↓
+Risk = Critical
+        ↓
 Export Blocked
-        │
-        ▼
-Evidence Preserved
-        │
-        ▼
-Administrator Notified
-        │
-        ▼
-Session Terminated
+        ↓
+Evidence Captured
+        ↓
+Admin Notified
+        ↓
+Session Restricted / Terminated
 ```
 
-The Doctor cannot obtain the protected information through the blocked operation.
-
-### Critical Incident Example
-
 <p align="center">
-  <img src="assets/critical-security-alert.png" alt="WeCare Critical Security Alert" width="82%">
+  <img src="assets/critical-security-alert.png" alt="WeCare Critical Security Alert" width="85%">
 </p>
 
-The alert provides the Administrator with important incident information such as:
+A Critical alert can display information such as:
 
 - Doctor
 - Role
@@ -335,276 +507,183 @@ The alert provides the Administrator with important incident information such as
 - Number of records
 - Risk level
 - Result
-- Date / time
-- Incident identifier
-
----
-
-# Artificial Intelligence
-
-WeCare uses **Isolation Forest** for behavioral anomaly detection. :contentReference[oaicite:1]{index=1}
-
-Isolation Forest is an:
-
-- unsupervised learning algorithm
-- anomaly-detection algorithm
-- tree-based model
-- ensemble-learning technique
-
-It is designed to identify behavior that differs significantly from a healthcare worker's normal activity.
-
----
-
-## Behavioral Features
-
-The model can evaluate information such as:
-
-```text
-Login Time
-Session Duration
-Records Viewed
-Downloads
-Departments Accessed
-Failed Authentication Attempts
-Unknown Device Activity
-External Network Activity
-After-Hours Activity
-Bulk Export Behaviour
-```
-
----
-
-# AI Detection Workflow
-
-```text
-Healthcare Worker Activity
-           │
-           ▼
-     Feature Extraction
-           │
-           ▼
- Historical Behaviour Baseline
-           │
-           ▼
-     Isolation Forest
-           │
-           ▼
-      Anomaly Score
-           │
-           ▼
-      Risk Evaluation
-           │
-    ┌──────┼──────┬─────────┐
-    ▼      ▼      ▼         ▼
-   Low   Medium   High    Critical
-```
-
-Normal behavior remains close to the learned baseline.
-
-Unusual combinations of activity receive a higher anomaly score.
-
----
-
-# Hybrid AI + Zero Trust Security
-
-Machine learning does not make every security decision by itself.
-
-WeCare deliberately combines:
-
-```text
-Machine Learning
-       +
-Security Policies
-       +
-Historical Activity
-       +
-Authorization
-       =
-Final Security Response
-```
-
-### Machine Learning detects
-
-- unusual behavior
-- abnormal access patterns
-- behavioral deviation
-- suspicious combinations of activity
-
-### Zero Trust rules enforce
-
-- export authorization
-- approval requirements
-- cumulative export limits
-- critical-operation blocking
-- session restriction
-- administrative escalation
-
-This hybrid approach provides predictable enforcement while still benefiting from behavioral intelligence.
-
----
-
-# Security Risk Spider Profile
-
-The Administrator dashboard provides a radar/spider visualization of the current behavioral security environment.
-
-The graph includes:
-
-- Record Access
-- Downloads
-- Behavior Deviation
-- Medium+ Risk
-- High+ Risk
-- Critical Exposure
-
-The chart gives Administrators a quick overview of current behavioral risk.
+- Date and time
+- Incident ID
 
 ---
 
 # Real-Time Security Communication
 
-WeCare uses **Socket.IO** to deliver security events without requiring page refreshes. :contentReference[oaicite:2]{index=2}
+WeCare uses **Socket.IO** for real-time communication.
 
-Real-time events can include:
+Security events do not require a manual browser refresh.
 
-- export approval requests
-- export approval decisions
-- export rejection decisions
-- Doctor security notices
-- live Administrator messages
-- Critical incident notifications
-- session restriction events
-- escalation events
-
-Administrators can send a notice and the Doctor receives it as a **live popup** on the Doctor Dashboard.
-
-The Security Inbox also preserves communication for later review.
-
-## Live Security Alert Demo
-
-<p align="center">
-  <img src="assets/live-security-alert.gif" alt="WeCare Live Security Alert Demo" width="92%">
-</p>
-
-The GIF can demonstrate:
+Example:
 
 ```text
-Suspicious Doctor Activity
+Doctor Performs Suspicious Action
         ↓
-Security Event Generated
+Backend Detects Critical Risk
         ↓
-Administrator Alerted
+Socket.IO Event
         ↓
-Live Security Popup Appears
+Admin Dashboard
+        ↓
+Critical Security Popup
 ```
+
+Socket.IO can support:
+
+- Critical alerts
+- Export approval requests
+- Export approval decisions
+- Security notices
+- Doctor notifications
+- Session restrictions
+- Dashboard updates
+
+---
+
+# Security Risk Spider Profile
+
+The Admin Dashboard contains a Security Risk Spider Profile.
+
+The visualization helps show multiple dimensions of security risk instead of displaying only one score.
+
+Example dimensions include:
+
+```text
+Record Access
+Downloads
+Behavior Deviation
+Medium+ Risk
+High+ Risk
+Critical Exposure
+```
+
+This helps administrators understand why behavior is considered suspicious.
 
 ---
 
 # Administrator Accountability
 
-Administrators are not automatically treated as harmless privileged users.
+WeCare also monitors privileged users.
 
-Consider this scenario:
+Administrators are not automatically considered safe simply because they have more authority.
+
+For example:
 
 ```text
-Doctor generates suspicious export request
-                │
-                ▼
-        Risk Level: High
-                │
-                ▼
-      Administrator receives warning
-                │
-                ▼
-         "Approve Anyway"
+High / Critical Request
+        ↓
+Admin Receives Warning
+        ↓
+Admin Selects "Approve Anyway"
+        ↓
+Unsafe Override Recorded
 ```
 
-One override may have a legitimate explanation.
+Repeated unsafe overrides can increase administrator risk.
 
-Repeated unsafe overrides can indicate an administrative insider threat.
-
----
-
-# Administrative Risk Escalation
-
-WeCare records unsafe High/Critical approval overrides.
+Example escalation:
 
 ```text
 First Unsafe Override
-        │
-        ▼
-Medium Administrative Risk
+        ↓
+Administrative Risk Increases
 
 Second Unsafe Override
-        │
-        ▼
-High Administrative Risk
+        ↓
+Higher Administrative Risk
 
 Third Unsafe Override
-        │
-        ▼
-Critical Administrative Incident
-        │
-        ├── Evidence Preserved
-        ├── Account Restricted
-        ├── Session Terminated
-        └── Higher Official Notified
+        ↓
+Critical Admin Incident
+        ↓
+Evidence Preserved
+        ↓
+Account Restricted
+        ↓
+Session Terminated
+        ↓
+Higher Official Escalation
 ```
 
-This creates accountability on both sides of the approval workflow.
+The principle is:
+
+> **Privilege does not mean unlimited trust.**
 
 ---
 
 # Evidence Vault
 
-Critical security incidents can preserve digital evidence for investigation. :contentReference[oaicite:3]{index=3}
+WeCare contains a separate **Evidence Vault** for forensic investigation.
 
-Evidence may include:
+When High or Critical incidents occur, the system can preserve digital evidence.
 
-- Screenshot
-- Session Replay
-- Security Timeline
-- Incident Metadata
-- Page Snapshot
-- Evidence Manifest
+Evidence can include:
+
+```text
+screenshot.png
+replay.json
+timeline.json
+incident.json
+manifest.json
+page-snapshot.html
+```
 
 <p align="center">
   <img src="assets/evidence-vault.png" alt="WeCare Evidence Vault" width="95%">
 </p>
 
-The Evidence Vault provides investigators with a searchable view of preserved Critical incidents.
-
-Displayed information can include:
+The Evidence Vault can display:
 
 - User
 - Role
 - Action
-- Risk
-- Date / Time
-- Evidence access
+- Risk level
+- Incident ID
+- Date and time
+- Screenshot
+- Session replay
+- Security timeline
+- Incident metadata
 
 ---
 
-## Evidence Investigation Demo
+#  Session Replay
 
-<p align="center">
-  <img src="assets/evidence-vault-demo.gif" alt="WeCare Evidence Vault Investigation Demo" width="92%">
-</p>
+WeCare uses **rrweb** to capture browser-session activity.
 
-The GIF can demonstrate:
+Recorded browser events can later be reconstructed using `rrweb-player`.
+
+This allows investigators to understand what happened before and during a suspicious action.
+
+Example:
 
 ```text
 Critical Incident
-      ↓
+        ↓
 Open Evidence Vault
-      ↓
+        ↓
 Select Incident
-      ↓
+        ↓
 View Screenshot
-      ↓
+        ↓
 Review Timeline
-      ↓
+        ↓
 Replay Session
 ```
+
+---
+
+# Screenshot Evidence
+
+WeCare uses **html2canvas** for browser screenshot capture.
+
+During security incidents, the current application state can be captured and stored as part of the evidence package.
+
+This helps investigators understand what the user was viewing when the incident occurred.
 
 ---
 
@@ -612,129 +691,195 @@ Replay Session
 
 Evidence access is deliberately separated.
 
-### Doctor Evidence
+### Doctor Incident Evidence
 
-Appropriate Doctor incident evidence may be viewed by an Administrator during investigation.
+Appropriate Doctor evidence can be made available to administrators for investigation.
 
 ### Administrator Evidence
 
-Evidence generated from suspicious Administrator behavior is preserved inside the **Evidence Vault**.
+Evidence created from suspicious administrator behavior remains protected inside the Evidence Vault.
 
-The normal Admin Dashboard does not expose internal Administrator evidence identifiers or direct Admin-evidence controls.
-
-This separation helps preserve investigation integrity.
+This separation helps protect investigation integrity.
 
 ---
 
 # Automated Incident Response
 
-WeCare can automatically respond when risk reaches a Critical level.
+A Critical security decision can trigger an automated response.
 
 ```text
 Detect
-  ↓
+   ↓
 Classify
-  ↓
+   ↓
 Block
-  ↓
+   ↓
 Capture Evidence
-  ↓
+   ↓
 Notify
-  ↓
+   ↓
 Restrict Account
-  ↓
+   ↓
 Terminate Session
-  ↓
+   ↓
 Escalate
 ```
 
-The goal is not simply to display a warning.
-
-WeCare demonstrates:
+WeCare therefore demonstrates:
 
 > **Detection + Containment + Investigation**
 
 ---
 
-# Administrator Dashboard
-
-The Administrator interface includes:
-
-- Dashboard
-- Doctors
-- Patients
-- Reception
-- Laboratory
-- Pharmacy
-- Medical Records
-- Export Requests
-- Threat Monitoring
-- Security Notices
-- AI Security Operations Center
-
-Administrators can monitor clinical activity and security operations from one interface.
-
----
-
-# AI Security Operations Center
-
-The AI Security Operations Center provides visibility into behavioral detections.
-
-Information can include:
-
-- prediction
-- anomaly score
-- confidence
-- risk classification
-- behavioral explanation
-- recent security activity
-- incident information
-
-This allows Administrators to understand **why an activity was considered suspicious**, rather than receiving only an unexplained alert.
-
----
-
-# Overall Architecture
+# Complete Architecture
 
 ```text
-                         WECARE PLATFORM
-                                │
-          ┌─────────────────────┴─────────────────────┐
-          │                                           │
-          ▼                                           ▼
-   Doctor Dashboard                          Admin Dashboard
-          │                                           │
-          └─────────────────────┬─────────────────────┘
-                                │
-                                ▼
-                    Authentication / JWT Layer
-                                │
-                                ▼
-                     Zero Trust Policy Engine
-                                │
-                     ┌──────────┴──────────┐
-                     │                     │
-                     ▼                     ▼
-              Behavioral Data       Export Activity
-                     │                     │
-                     └──────────┬──────────┘
-                                ▼
-                       Isolation Forest
-                                │
-                                ▼
-                      Risk Classification
-                                │
-             ┌──────────────────┴──────────────────┐
-             │                                     │
-             ▼                                     ▼
-       Normal Activity                      Suspicious Activity
-             │                                     │
-             ▼                                     ▼
-      Continue Workflow                   Security Response
-                                                   │
-                         ┌─────────────────────────┼─────────────┐
-                         ▼                         ▼             ▼
-                   Admin Review              Evidence Vault   Containment
+                    WECARE PLATFORM
+                           │
+            ┌──────────────┴──────────────┐
+            │                             │
+            ▼                             ▼
+     Doctor Dashboard               Admin Dashboard
+            │                             │
+            └──────────────┬──────────────┘
+                           │
+                           ▼
+                    Node.js + Express
+                           │
+                           ▼
+                  JWT Authentication
+                           │
+                           ▼
+                    Role Verification
+                           │
+                           ▼
+                    Service Processing
+                           │
+                           ▼
+                Current User Activity
+                           │
+                           ▼
+                         SQLite
+                  Historical Context
+                           │
+                           ▼
+                   Feature Extraction
+                           │
+                           ▼
+                    Isolation Forest
+                           │
+                           ▼
+                     Anomaly Score
+                           │
+                           ▼
+                       Risk Engine
+                           │
+                           ▼
+                    Zero Trust Rules
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+        Allow          Approval           Block
+                                             │
+                                             ▼
+                                      Evidence Capture
+                                             │
+                                             ▼
+                                       Evidence Vault
+
+Backend
+   │
+   └──────────── Socket.IO ───────────► Admin Dashboard
+```
+
+---
+
+#  Complete Working Flow
+
+When a Doctor performs an action:
+
+```text
+Frontend
+        ↓
+HTTP / Fetch Request
+        ↓
+Express Route
+        ↓
+JWT Verification
+        ↓
+Role Verification
+        ↓
+Service Processing
+        ↓
+Current Activity
+        ↓
+SQLite Historical Context
+        ↓
+Feature Extraction
+        ↓
+Isolation Forest
+        ↓
+Anomaly Score
+        ↓
+Risk Engine
+        ↓
+Zero Trust Rules
+        ↓
+Security Decision
+        ↓
+Allow / Approval / Block
+```
+
+For important incidents:
+
+```text
+Security Decision
+        ↓
+Socket.IO Alert
+        +
+Evidence Capture
+        ↓
+Admin Dashboard
+        +
+Evidence Vault
+```
+
+---
+
+# Database
+
+WeCare uses **SQLite**.
+
+The database stores information used by both normal healthcare operations and security analysis.
+
+Data can include:
+
+```text
+Users
+Roles
+Doctors
+Patients
+Medical Records
+Activity Logs
+Export History
+Export Requests
+Security Incidents
+Risk Information
+Session Information
+Approval History
+```
+
+SQLite also provides historical activity to the security engine.
+
+This means the system can evaluate:
+
+```text
+Current Behavior
+        +
+Previous Behavior
+        ↓
+Better Risk Decision
 ```
 
 ---
@@ -743,121 +888,450 @@ This allows Administrators to understand **why an activity was considered suspic
 
 | Layer | Technology |
 |---|---|
-| Backend | Node.js, Express.js |
 | Frontend | HTML5, CSS3, Vanilla JavaScript |
+| Backend | Node.js, Express.js |
 | Database | SQLite |
-| Real-Time Communication | Socket.IO |
 | Authentication | JWT |
-| Password Security | bcrypt |
+| Password Security | bcryptjs |
+| Real-Time Communication | Socket.IO |
 | Machine Learning | Isolation Forest |
-| Session Evidence | rrweb |
 | Screenshot Evidence | html2canvas |
+| Session Recording | rrweb |
+| Session Replay | rrweb-player |
 | Security Architecture | Zero Trust |
 | Version Control | Git & GitHub |
+
+---
+
+#  Frontend
+
+The frontend is built using:
+
+```text
+HTML5
+CSS3
+Vanilla JavaScript
+Fetch API
+Socket.IO Client
+html2canvas
+rrweb
+rrweb-player
+```
+
+### HTML5
+
+Used for:
+
+- Doctor Dashboard
+- Admin Dashboard
+- Medical Reports
+- Scan Viewer
+- Security Alerts
+- Evidence Vault
+
+### CSS3
+
+Used for:
+
+- Dashboard layouts
+- Security interfaces
+- Responsive components
+- Alerts
+- Medical-report viewers
+- Risk visualizations
+
+### JavaScript
+
+Used for:
+
+- API communication
+- Dashboard interaction
+- Authentication sessions
+- Export workflows
+- Security monitoring
+- Evidence capture
+- Socket.IO events
+
+---
+
+#  Backend
+
+The backend is built with:
+
+```text
+Node.js
+Express.js
+Socket.IO
+JWT
+bcryptjs
+SQLite3
+```
+
+### Node.js
+
+Runs the WeCare backend.
+
+### Express.js
+
+Handles HTTP routes and REST API requests.
+
+### JWT
+
+Used for authentication and role validation.
+
+### bcryptjs
+
+Used for password hashing and verification.
+
+### Socket.IO
+
+Handles real-time communication.
+
+### SQLite3
+
+Stores application and security data.
+
+---
+
+# Main Security Services
+
+The security functionality is separated into service modules.
+
+```text
+services/
+├── activityService.js
+├── datasetService.js
+├── evidenceService.js
+├── isolationForest.js
+├── mlService.js
+├── riskEngine.js
+├── sessionService.js
+└── socketService.js
+```
+
+---
+
+## `activityService.js`
+
+Handles user-activity processing and activity records.
+
+---
+
+## `datasetService.js`
+
+Prepares behavioral information used by security and machine-learning components.
+
+---
+
+## `evidenceService.js`
+
+Handles:
+
+- Incident evidence
+- Screenshots
+- Session replay
+- Timeline information
+- Evidence metadata
+- Evidence files
+
+---
+
+## `isolationForest.js`
+
+Contains the Isolation Forest anomaly-detection implementation.
+
+---
+
+## `mlService.js`
+
+Connects behavioral features with machine-learning analysis.
+
+---
+
+## `riskEngine.js`
+
+Combines behavioral information, security rules, anomaly output, and business logic to determine risk.
+
+---
+
+## `sessionService.js`
+
+Handles security-related session monitoring and session controls.
+
+---
+
+## `socketService.js`
+
+Handles Socket.IO communication and real-time security events.
 
 ---
 
 # Project Structure
 
 ```text
-WeCare
+WeCare/
 │
-├── public/
-│   ├── css/
-│   ├── js/
-│   ├── assets/
-│   ├── doctor-dashboard.html
-│   └── admin-dashboard.html
+├── server.js
+├── evidenceVaultServer.js
+├── package.json
+│
+├── database/
+│   ├── database.js
+│   └── seed.js
 │
 ├── routes/
 │   ├── authRoutes.js
+│   ├── activityRoutes.js
+│   ├── evidenceRoutes.js
 │   ├── communicationRoutes.js
-│   └── mlRoutes.js
+│   └── ...
 │
 ├── services/
+│   ├── activityService.js
+│   ├── datasetService.js
+│   ├── evidenceService.js
 │   ├── isolationForest.js
 │   ├── mlService.js
-│   ├── evidenceService.js
-│   ├── activityService.js
+│   ├── riskEngine.js
 │   ├── sessionService.js
 │   └── socketService.js
 │
 ├── middleware/
 │   └── authMiddleware.js
 │
+├── public/
+│   ├── css/
+│   ├── js/
+│   ├── doctor-dashboard.html
+│   ├── admin-dashboard.html
+│   └── ...
+│
 ├── evidence-vault-public/
 │
-├── assets/
-│   ├── doctor-dashboard.png
-│   ├── critical-security-alert.png
-│   ├── evidence-vault.png
-│   ├── live-security-alert.gif
-│   └── evidence-vault-demo.gif
-│
-├── evidenceVaultServer.js
-├── server.js
-├── package.json
-└── README.md
+└── assets/
+    ├── doctor-dashboard.png
+    ├── critical-security-alert.png
+    └── evidence-vault.png
 ```
 
 ---
 
-# Demonstration Scenarios
+# Image Assets
 
-## Scenario 1 — Legitimate Small Export
+The README uses these three images:
 
 ```text
-Doctor selects a few records
-        ↓
-Provides legitimate purpose
-        ↓
-Policy evaluates request
-        ↓
-Export permitted
-        ↓
-Activity logged
+assets/
+├── doctor-dashboard.png
+├── critical-security-alert.png
+└── evidence-vault.png
 ```
+
+Make sure the names match exactly.
 
 ---
 
-## Scenario 2 — Medium Export
+# Demo Login Credentials
+
+> These credentials are intended only for testing and demonstration.
+
+## Admin
 
 ```text
-Doctor selects 11–50 records
-        ↓
-Admin approval required
-        ↓
-Request appears in Export Requests
-        ↓
-Admin Approves / Rejects
-        ↓
-Doctor receives live decision
+Username: admin
+Password: WeCareAdmin@2026#A91K
+```
+
+## Doctor
+
+```text
+Username: doctor
+Password: WeCareDoctor@2026#D71M
 ```
 
 ---
 
-## Scenario 3 — Low-and-Slow Export
+# Evidence Officer Login
+
+Evidence Vault login information should be configured using environment variables.
+
+```text
+EVIDENCE_OFFICER_USER
+EVIDENCE_OFFICER_PASSWORD
+```
+
+For security, do **not** publish the real Evidence Officer password or Evidence Vault API key in GitHub.
+
+---
+
+# How to Run WeCare
+
+## 1. Requirements
+
+Install:
+
+```text
+Node.js 18+
+npm
+Git
+```
+
+---
+
+## 2. Clone Repository
+
+```bash
+git clone <YOUR-GITHUB-REPOSITORY-URL>
+```
+
+Enter the project directory:
+
+```bash
+cd <YOUR-REPOSITORY-NAME>
+```
+
+---
+
+## 3. Install Dependencies
+
+Run:
+
+```bash
+npm install
+```
+
+This installs the required dependencies.
+
+---
+
+#  Environment Variables
+
+Create a `.env` file in the root directory.
+
+Example:
+
+```env
+JWT_SECRET=replace-with-a-strong-secret
+
+NODE_ENV=development
+
+EVIDENCE_OFFICER_USER=officer
+EVIDENCE_OFFICER_PASSWORD=replace-with-a-secure-password
+```
+
+If using the Evidence Vault as a separate service:
+
+```env
+EVIDENCE_VAULT_URL=https://your-evidence-vault-url
+EVIDENCE_VAULT_API_KEY=replace-with-a-private-shared-key
+```
+
+Never commit real secrets to GitHub.
+
+---
+
+#  Start Main WeCare Application
+
+Run:
+
+```bash
+npm start
+```
+
+This executes:
+
+```bash
+node server.js
+```
+
+The server initializes:
+
+```text
+Express
+SQLite
+Authentication
+Application Routes
+Security Services
+Socket.IO
+Risk Engine
+```
+
+---
+
+# Start Evidence Vault
+
+To run the Evidence Vault separately:
+
+```bash
+node evidenceVaultServer.js
+```
+
+For local development, the Vault can operate separately from the main application.
+
+---
+
+# Basic Testing Flow
+
+After starting WeCare:
+
+## Normal Activity
+
+```text
+Doctor Login
+        ↓
+View Patient Record
+        ↓
+Normal Behavior
+        ↓
+Low Risk
+        ↓
+Access Allowed
+```
+
+---
+
+## Medium Export
+
+```text
+Doctor Selects Multiple Records
+        ↓
+Provides Purpose
+        ↓
+Admin Approval Required
+        ↓
+Admin Reviews Request
+        ↓
+Approve / Reject
+        ↓
+Doctor Receives Decision
+```
+
+---
+
+## Low-and-Slow Export
 
 ```text
 Small Export
-     ↓
+        ↓
 Small Export
-     ↓
+        ↓
 Small Export
-     ↓
-Activity Correlation
-     ↓
-Suspicious Pattern Detected
-     ↓
-Future Export Requires Approval
+        ↓
+Historical Activity Correlated
+        ↓
+Cumulative Risk Detected
+        ↓
+Additional Approval Required
 ```
 
 ---
 
-## Scenario 4 — Critical Bulk Export
+## Critical Export
 
 ```text
-Doctor attempts extreme bulk export
+Doctor Attempts Extreme Bulk Export
+        ↓
+Behavior Analyzed
         ↓
 Critical Risk
         ↓
@@ -867,141 +1341,103 @@ Evidence Captured
         ↓
 Admin Alerted
         ↓
-Doctor Session Terminated
+Session Restricted / Terminated
 ```
 
 ---
 
-## Scenario 5 — Unsafe Administrator
+#  Security Design
 
-```text
-High/Critical Request
-        ↓
-Admin chooses Approve Anyway
-        ↓
-Repeated unsafe decisions detected
-        ↓
-Administrative risk increases
-        ↓
-Critical Admin Incident
-        ↓
-Evidence preserved
-        ↓
-Account restricted
-        ↓
-Higher Official escalation
-```
+WeCare follows several important security principles.
 
----
-
-# Running Locally
-
-## Install Dependencies
-
-```bash
-npm install
-```
-
-## Start WeCare
-
-```bash
-npm start
-```
-
-Main application:
-
-```text
-http://localhost:80
-```
-
-Evidence Vault:
-
-```text
-http://localhost:8080
-```
-
----
-
-# Security Design Principles
-
-WeCare was built around five principles.
-
-### 01 — Authentication is not permanent trust
+### Authentication is not permanent trust
 
 A valid account can still behave maliciously.
 
-### 02 — Small actions can create a large threat
+### Behavior matters
 
-Repeated small exports must be correlated over time.
+Current behavior should be compared with historical behavior.
 
-### 03 — Legitimate operations should remain possible
+### Small actions can create a large threat
 
-Security should require justification or approval rather than blindly blocking every export.
+Repeated small exports can indicate data exfiltration.
 
-### 04 — Privileged users require accountability
+### AI should assist security decisions
+
+Machine learning detects anomalies while Zero Trust rules enforce important controls.
+
+### Privileged users require accountability
 
 Administrators can also become insider threats.
 
-### 05 — Critical decisions require evidence
+### Critical actions require evidence
 
-Security incidents should leave a reliable investigation trail.
+Important security incidents should preserve enough information for investigation.
 
 ---
 
-# Project Objective
-
-WeCare demonstrates a healthcare security architecture capable of continuously answering three questions:
+# WeCare in One Flow
 
 ```text
-WHO is performing the action?
-
-WHAT are they attempting to do?
-
-DOES their behaviour still deserve trust?
+Doctor / Admin
+      ↓
+Authentication
+      ↓
+User Activity
+      ↓
+Activity Monitoring
+      ↓
+Historical Context
+      ↓
+Feature Extraction
+      ↓
+Isolation Forest
+      ↓
+Anomaly Score
+      ↓
+Risk Engine
+      ↓
+Zero Trust Rules
+      ↓
+Allow / Approval / Block
+      ↓
+Real-Time Notification
+      ↓
+Evidence Capture
+      ↓
+Evidence Vault
+      ↓
+Incident Investigation
 ```
 
-By combining **healthcare operations, Zero Trust policies, Isolation Forest behavioral analysis, real-time incident response, and digital evidence preservation**, WeCare demonstrates a practical approach to protecting patient information against modern insider threats.
-
 ---
 
-# Future Enhancements
+# WeCare
 
-Possible future improvements include:
+WeCare protects healthcare information by combining:
 
-- Role-specific behavioral models
-- Federated learning across hospital departments
-- Advanced device fingerprinting
-- SIEM integration
-- Automated threat-intelligence correlation
-- Explainable AI dashboards
-- Risk-adaptive authentication
-- Hardware-backed evidence signing
-- Multi-hospital security federation
-- Advanced patient-privacy analytics
+```text
+Healthcare Operations
+        +
+Behavioral Intelligence
+        +
+Machine Learning
+        +
+Zero Trust
+        +
+Real-Time Security
+        +
+Automated Incident Response
+        +
+Digital Evidence
+```
 
----
+The core principle is simple:
 
-# Academic Purpose
+> **Authentication gives access. Behavior determines trust.**
 
-WeCare is developed as an **academic and cybersecurity demonstration project**.
+WeCare continuously evaluates:
 
-The project demonstrates concepts related to:
-
-- Healthcare cybersecurity
-- Insider-threat detection
-- Zero Trust Architecture
-- Behavioral analytics
-- Machine learning
-- Incident response
-- Digital forensics
-- Privileged-user accountability
-
----
-
-<p align="center">
-
-### WeCare
-
-**Healthcare needs more than trusted accounts. It needs trusted behaviour.**
-
-</p>
+> **Who is acting?**  
+> **What are they doing?**  
+> **Does their behavior still deserve trust?**
